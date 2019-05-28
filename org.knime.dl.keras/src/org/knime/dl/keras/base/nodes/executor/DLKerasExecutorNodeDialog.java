@@ -46,40 +46,25 @@
  */
 package org.knime.dl.keras.base.nodes.executor;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
-import org.knime.dl.base.nodes.executor2.DLDefaultExecutorNodeModel;
-import org.knime.dl.keras.base.portobjects.DLKerasNetworkPortObjectBase;
+import javax.swing.JPanel;
+
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.dl.base.nodes.executor2.DLExecutorNodeDialog;
 
 /**
  * @author Benjamin Wilhelm, KNIME GmbH, Konstanz, Germany
  */
-public class DLKerasExecutorNodeFactory extends NodeFactory<DLDefaultExecutorNodeModel> {
+public class DLKerasExecutorNodeDialog extends DLExecutorNodeDialog {
 
-    @Override
-    public DLDefaultExecutorNodeModel createNodeModel() {
-        return new DLDefaultExecutorNodeModel(DLKerasNetworkPortObjectBase.TYPE);
-    }
+    public DLKerasExecutorNodeDialog() {
+        super();
+        final DialogComponentString cudaVisibleDevices =
+            new DialogComponentString(new SettingsModelString("cuda_visible_devices", ""), "CUDA_VISIBLE_DEVICES");
 
-    @Override
-    protected int getNrNodeViews() {
-        return 0;
-    }
+        final JPanel advancedPanel = new JPanel();
+        advancedPanel.add(cudaVisibleDevices.getComponentPanel());
 
-    @Override
-    public NodeView<DLDefaultExecutorNodeModel> createNodeView(final int viewIndex,
-        final DLDefaultExecutorNodeModel nodeModel) {
-        return null;
-    }
-
-    @Override
-    protected boolean hasDialog() {
-        return true;
-    }
-
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new DLKerasExecutorNodeDialog();
+        addTab("Advanced", advancedPanel);
     }
 }
